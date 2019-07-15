@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package standard;
+
+
+// 状态
+enum State {
+  UNKNOWN         = 0 ; // 未知
+  SUCCESS         = 1 ; // 成功
+  FAILURE         = 2 ; // 失败
+  REPEAT          = 3 ; // 重复
+  WAITING         = 4 ; // 等待
+  PROCEEDING      = 5 ; // 处理中
+  NOT_EXIST       = 6 ; // 不存在
+  UNDEFINED       = 7 ; // 未定义
+  PROHIBITED      = 8 ; // 被禁止
+  DIAL_DB_FATLURE = 9 ; // DB 连接失败
+  DB_OPERATION_FATLURE = 10; // 数据库操作失败
+}
+
+enum Type {
+  SMS  = 0 ; // 短信
+  CALL = 1 ; // 电话
+  EMAIL= 2 ; // 邮件
+}
+
+// HashCode 的设计是为了
+// 同一个用户可能发送过多次相同操作的验证码、甚至可能出现验证码也相同
+// 每次发送完成、会得到一个 HashCode
+// 在验证时要通过 HashCode + 用户收到的 Code 来做验证
+
+message CheckVerifyCodeRequest{
+  string HashCode      = 1 ;  // 唯一标识符
+  string VerifyCode  = 2 ;  // 验证码
+}
+
+message CheckVerifyCodeeResponse {
+  State State    = 1 ;
+  string Message = 2 ;
+}
+
+message DiscardVerifyCodeRequest{
+  string HashCode  = 1 ;  // 唯一标识符
+}
+
+message DiscardVerifyCodeResponse {
+  State State    = 1 ;
+  string Message = 2 ;
+}
+
+message SendVerifyCodeByEmailRequest {
+  string Action      = 2 ; // 进行的操作
+  string EmailAddress = 3 ; // 邮件地址
+  uint64 ValidityPeriod  = 5 ; // 有效期 单位s
+}
+
+//发送成功失败状态
+message SendVerifyCodeByEmailResponse {
+  State State    = 1 ;
+  string Message = 2 ;
+  string HashCode  = 3 ;  // 唯一标识符
+}
+
+message SendVerifyCodeByPhoneSmsRequest {
+  string PhoneNumber = 3 ; // 手机号码
+  string CountryCode = 4 ; // 国家代码
+  uint64 ValidityPeriod  = 5 ; // 有效期 单位s
+}
+
+//发送成功失败状态
+message SendVerifyCodeByPhoneSmsResponse {
+  State State    = 1 ;
+  string Message = 2 ;
+  string HashCode  = 3 ;  // 唯一标识符
+}
+
+message SendVerifyCodeByCallPhoneRequest {
+  string PhoneNumber = 3 ; // 手机号码
+  string CountryCode = 4 ; // 国家代码
+  uint64 ValidityPeriod  = 5 ; // 有效期 单位s
+}
+//发送成功失败状态
+message SendVerifyCodeByCallPhoneResponse {
+  State State    = 1 ;
+  string Message = 2 ;
+  string HashCode  = 3 ;  // 唯一标识符
+}
+
+service Sender {
+  rpc CheckVerifyCode(CheckVerifyCodeRequest) returns (CheckVerifyCodeeResponse){}      // 校验验证码
+  rpc DiscardVerifyCode(DiscardVerifyCodeRequest) returns (DiscardVerifyCodeResponse){}     // 废弃一条验证码
+  rpc SendVerifyCodeByEmail(SendVerifyCodeByEmailRequest) returns (SendVerifyCodeByEmailResponse){}     // 通过邮件发送验证码
+  rpc SendVerifyCodeByPhoneSms(SendVerifyCodeByPhoneSmsRequest) returns (SendVerifyCodeByPhoneSmsResponse){}     // 通过短信发送验证码
+  rpc SendVerifyCodeByCallPhone(SendVerifyCodeByCallPhoneRequest) returns (SendVerifyCodeByCallPhoneResponse){}     // 通过电话发送验证码
+}
+
+// 发送：
+// 发送 邮件、短信、电话验证码、并且验证
+// 记录：
+// 存储发送过的任意数据的记录

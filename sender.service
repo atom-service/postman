@@ -1,0 +1,13 @@
+# 注册服务
+
+[Unit]
+Description=RPC Sender Service
+[Service]
+Type=simple
+Restart=always
+ExecStart=/www/grpc-services/sender/bin/liunx-amd64
+EnvironmentFile=/www/grpc-services/sender/.env
+
+[Install]
+# 依赖当前 Unit 的 Unit
+WantedBy=multi-user.target
