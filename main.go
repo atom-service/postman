@@ -14,6 +14,7 @@ import (
 var isDev bool
 
 func init() {
+	godotenv.Load()
 	flag.BoolVar(&isDev, "dev", false, "运行模式，可选 dev")
 }
 
