@@ -8,7 +8,7 @@ import (
 
 	"github.com/yinxulai/goutils/random"
 	tencentSMS "github.com/yinxulai/goutils/tencent/sms"
-	"github.com/yinxulai/grpc-services/sender/standard"
+	"github.com/grpcbrick/sender/standard"
 )
 
 // NewService NewService

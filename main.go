@@ -6,8 +6,8 @@ import (
 	"os"
 
 	"github.com/yinxulai/goutils/grpc/interceptor"
-	"github.com/yinxulai/grpc-services/sender/provider"
-	"github.com/yinxulai/grpc-services/sender/standard"
+	"github.com/grpcbrick/sender/provider"
+	"github.com/grpcbrick/sender/standard"
 	"google.golang.org/grpc"
 )
 
