@@ -37,22 +37,20 @@ const (
 	State_NOT_EXIST            State = 6
 	State_UNDEFINED            State = 7
 	State_PROHIBITED           State = 8
-	State_DIAL_DB_FATLURE      State = 9
-	State_DB_OPERATION_FATLURE State = 10
+	State_DB_OPERATION_FATLURE State = 9
 )
 
 var State_name = map[int32]string{
-	0:  "UNKNOWN",
-	1:  "SUCCESS",
-	2:  "FAILURE",
-	3:  "REPEAT",
-	4:  "WAITING",
-	5:  "PROCEEDING",
-	6:  "NOT_EXIST",
-	7:  "UNDEFINED",
-	8:  "PROHIBITED",
-	9:  "DIAL_DB_FATLURE",
-	10: "DB_OPERATION_FATLURE",
+	0: "UNKNOWN",
+	1: "SUCCESS",
+	2: "FAILURE",
+	3: "REPEAT",
+	4: "WAITING",
+	5: "PROCEEDING",
+	6: "NOT_EXIST",
+	7: "UNDEFINED",
+	8: "PROHIBITED",
+	9: "DB_OPERATION_FATLURE",
 }
 
 var State_value = map[string]int32{
@@ -65,8 +63,7 @@ var State_value = map[string]int32{
 	"NOT_EXIST":            6,
 	"UNDEFINED":            7,
 	"PROHIBITED":           8,
-	"DIAL_DB_FATLURE":      9,
-	"DB_OPERATION_FATLURE": 10,
+	"DB_OPERATION_FATLURE": 9,
 }
 
 func (x State) String() string {
@@ -75,34 +72,6 @@ func (x State) String() string {
 
 func (State) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_0b3e239150a6a10f, []int{0}
-}
-
-type Type int32
-
-const (
-	Type_SMS   Type = 0
-	Type_CALL  Type = 1
-	Type_EMAIL Type = 2
-)
-
-var Type_name = map[int32]string{
-	0: "SMS",
-	1: "CALL",
-	2: "EMAIL",
-}
-
-var Type_value = map[string]int32{
-	"SMS":   0,
-	"CALL":  1,
-	"EMAIL": 2,
-}
-
-func (x Type) String() string {
-	return proto.EnumName(Type_name, int32(x))
-}
-
-func (Type) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_0b3e239150a6a10f, []int{1}
 }
 
 type CheckVerifyCodeRequest struct {
@@ -286,9 +255,9 @@ func (m *DiscardVerifyCodeResponse) GetMessage() string {
 }
 
 type SendVerifyCodeByEmailRequest struct {
-	Action               string   `protobuf:"bytes,2,opt,name=Action,proto3" json:"Action,omitempty"`
-	EmailAddress         string   `protobuf:"bytes,3,opt,name=EmailAddress,proto3" json:"EmailAddress,omitempty"`
-	ValidityPeriod       uint64   `protobuf:"varint,5,opt,name=ValidityPeriod,proto3" json:"ValidityPeriod,omitempty"`
+	Operation            string   `protobuf:"bytes,1,opt,name=Operation,proto3" json:"Operation,omitempty"`
+	EmailAddress         string   `protobuf:"bytes,2,opt,name=EmailAddress,proto3" json:"EmailAddress,omitempty"`
+	ValidityPeriod       int64    `protobuf:"varint,3,opt,name=ValidityPeriod,proto3" json:"ValidityPeriod,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -319,9 +288,9 @@ func (m *SendVerifyCodeByEmailRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_SendVerifyCodeByEmailRequest proto.InternalMessageInfo
 
-func (m *SendVerifyCodeByEmailRequest) GetAction() string {
+func (m *SendVerifyCodeByEmailRequest) GetOperation() string {
 	if m != nil {
-		return m.Action
+		return m.Operation
 	}
 	return ""
 }
@@ -333,7 +302,7 @@ func (m *SendVerifyCodeByEmailRequest) GetEmailAddress() string {
 	return ""
 }
 
-func (m *SendVerifyCodeByEmailRequest) GetValidityPeriod() uint64 {
+func (m *SendVerifyCodeByEmailRequest) GetValidityPeriod() int64 {
 	if m != nil {
 		return m.ValidityPeriod
 	}
@@ -396,55 +365,63 @@ func (m *SendVerifyCodeByEmailResponse) GetHashCode() string {
 	return ""
 }
 
-type SendVerifyCodeByPhoneSmsRequest struct {
-	PhoneNumber          string   `protobuf:"bytes,3,opt,name=PhoneNumber,proto3" json:"PhoneNumber,omitempty"`
-	CountryCode          string   `protobuf:"bytes,4,opt,name=CountryCode,proto3" json:"CountryCode,omitempty"`
-	ValidityPeriod       uint64   `protobuf:"varint,5,opt,name=ValidityPeriod,proto3" json:"ValidityPeriod,omitempty"`
+type SendVerifyCodeBySmsRequest struct {
+	Operation            string   `protobuf:"bytes,1,opt,name=Operation,proto3" json:"Operation,omitempty"`
+	PhoneNumber          string   `protobuf:"bytes,2,opt,name=PhoneNumber,proto3" json:"PhoneNumber,omitempty"`
+	CountryCode          string   `protobuf:"bytes,3,opt,name=CountryCode,proto3" json:"CountryCode,omitempty"`
+	ValidityPeriod       int64    `protobuf:"varint,4,opt,name=ValidityPeriod,proto3" json:"ValidityPeriod,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *SendVerifyCodeByPhoneSmsRequest) Reset()         { *m = SendVerifyCodeByPhoneSmsRequest{} }
-func (m *SendVerifyCodeByPhoneSmsRequest) String() string { return proto.CompactTextString(m) }
-func (*SendVerifyCodeByPhoneSmsRequest) ProtoMessage()    {}
-func (*SendVerifyCodeByPhoneSmsRequest) Descriptor() ([]byte, []int) {
+func (m *SendVerifyCodeBySmsRequest) Reset()         { *m = SendVerifyCodeBySmsRequest{} }
+func (m *SendVerifyCodeBySmsRequest) String() string { return proto.CompactTextString(m) }
+func (*SendVerifyCodeBySmsRequest) ProtoMessage()    {}
+func (*SendVerifyCodeBySmsRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_0b3e239150a6a10f, []int{6}
 }
 
-func (m *SendVerifyCodeByPhoneSmsRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_SendVerifyCodeByPhoneSmsRequest.Unmarshal(m, b)
+func (m *SendVerifyCodeBySmsRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SendVerifyCodeBySmsRequest.Unmarshal(m, b)
 }
-func (m *SendVerifyCodeByPhoneSmsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_SendVerifyCodeByPhoneSmsRequest.Marshal(b, m, deterministic)
+func (m *SendVerifyCodeBySmsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SendVerifyCodeBySmsRequest.Marshal(b, m, deterministic)
 }
-func (m *SendVerifyCodeByPhoneSmsRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_SendVerifyCodeByPhoneSmsRequest.Merge(m, src)
+func (m *SendVerifyCodeBySmsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SendVerifyCodeBySmsRequest.Merge(m, src)
 }
-func (m *SendVerifyCodeByPhoneSmsRequest) XXX_Size() int {
-	return xxx_messageInfo_SendVerifyCodeByPhoneSmsRequest.Size(m)
+func (m *SendVerifyCodeBySmsRequest) XXX_Size() int {
+	return xxx_messageInfo_SendVerifyCodeBySmsRequest.Size(m)
 }
-func (m *SendVerifyCodeByPhoneSmsRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_SendVerifyCodeByPhoneSmsRequest.DiscardUnknown(m)
+func (m *SendVerifyCodeBySmsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_SendVerifyCodeBySmsRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_SendVerifyCodeByPhoneSmsRequest proto.InternalMessageInfo
+var xxx_messageInfo_SendVerifyCodeBySmsRequest proto.InternalMessageInfo
 
-func (m *SendVerifyCodeByPhoneSmsRequest) GetPhoneNumber() string {
+func (m *SendVerifyCodeBySmsRequest) GetOperation() string {
+	if m != nil {
+		return m.Operation
+	}
+	return ""
+}
+
+func (m *SendVerifyCodeBySmsRequest) GetPhoneNumber() string {
 	if m != nil {
 		return m.PhoneNumber
 	}
 	return ""
 }
 
-func (m *SendVerifyCodeByPhoneSmsRequest) GetCountryCode() string {
+func (m *SendVerifyCodeBySmsRequest) GetCountryCode() string {
 	if m != nil {
 		return m.CountryCode
 	}
 	return ""
 }
 
-func (m *SendVerifyCodeByPhoneSmsRequest) GetValidityPeriod() uint64 {
+func (m *SendVerifyCodeBySmsRequest) GetValidityPeriod() int64 {
 	if m != nil {
 		return m.ValidityPeriod
 	}
@@ -452,7 +429,7 @@ func (m *SendVerifyCodeByPhoneSmsRequest) GetValidityPeriod() uint64 {
 }
 
 //发送成功失败状态
-type SendVerifyCodeByPhoneSmsResponse struct {
+type SendVerifyCodeBySmsResponse struct {
 	State                State    `protobuf:"varint,1,opt,name=State,proto3,enum=standard.State" json:"State,omitempty"`
 	Message              string   `protobuf:"bytes,2,opt,name=Message,proto3" json:"Message,omitempty"`
 	HashCode             string   `protobuf:"bytes,3,opt,name=HashCode,proto3" json:"HashCode,omitempty"`
@@ -461,46 +438,46 @@ type SendVerifyCodeByPhoneSmsResponse struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *SendVerifyCodeByPhoneSmsResponse) Reset()         { *m = SendVerifyCodeByPhoneSmsResponse{} }
-func (m *SendVerifyCodeByPhoneSmsResponse) String() string { return proto.CompactTextString(m) }
-func (*SendVerifyCodeByPhoneSmsResponse) ProtoMessage()    {}
-func (*SendVerifyCodeByPhoneSmsResponse) Descriptor() ([]byte, []int) {
+func (m *SendVerifyCodeBySmsResponse) Reset()         { *m = SendVerifyCodeBySmsResponse{} }
+func (m *SendVerifyCodeBySmsResponse) String() string { return proto.CompactTextString(m) }
+func (*SendVerifyCodeBySmsResponse) ProtoMessage()    {}
+func (*SendVerifyCodeBySmsResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_0b3e239150a6a10f, []int{7}
 }
 
-func (m *SendVerifyCodeByPhoneSmsResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_SendVerifyCodeByPhoneSmsResponse.Unmarshal(m, b)
+func (m *SendVerifyCodeBySmsResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SendVerifyCodeBySmsResponse.Unmarshal(m, b)
 }
-func (m *SendVerifyCodeByPhoneSmsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_SendVerifyCodeByPhoneSmsResponse.Marshal(b, m, deterministic)
+func (m *SendVerifyCodeBySmsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SendVerifyCodeBySmsResponse.Marshal(b, m, deterministic)
 }
-func (m *SendVerifyCodeByPhoneSmsResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_SendVerifyCodeByPhoneSmsResponse.Merge(m, src)
+func (m *SendVerifyCodeBySmsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SendVerifyCodeBySmsResponse.Merge(m, src)
 }
-func (m *SendVerifyCodeByPhoneSmsResponse) XXX_Size() int {
-	return xxx_messageInfo_SendVerifyCodeByPhoneSmsResponse.Size(m)
+func (m *SendVerifyCodeBySmsResponse) XXX_Size() int {
+	return xxx_messageInfo_SendVerifyCodeBySmsResponse.Size(m)
 }
-func (m *SendVerifyCodeByPhoneSmsResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_SendVerifyCodeByPhoneSmsResponse.DiscardUnknown(m)
+func (m *SendVerifyCodeBySmsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_SendVerifyCodeBySmsResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_SendVerifyCodeByPhoneSmsResponse proto.InternalMessageInfo
+var xxx_messageInfo_SendVerifyCodeBySmsResponse proto.InternalMessageInfo
 
-func (m *SendVerifyCodeByPhoneSmsResponse) GetState() State {
+func (m *SendVerifyCodeBySmsResponse) GetState() State {
 	if m != nil {
 		return m.State
 	}
 	return State_UNKNOWN
 }
 
-func (m *SendVerifyCodeByPhoneSmsResponse) GetMessage() string {
+func (m *SendVerifyCodeBySmsResponse) GetMessage() string {
 	if m != nil {
 		return m.Message
 	}
 	return ""
 }
 
-func (m *SendVerifyCodeByPhoneSmsResponse) GetHashCode() string {
+func (m *SendVerifyCodeBySmsResponse) GetHashCode() string {
 	if m != nil {
 		return m.HashCode
 	}
@@ -508,9 +485,10 @@ func (m *SendVerifyCodeByPhoneSmsResponse) GetHashCode() string {
 }
 
 type SendVerifyCodeByCallPhoneRequest struct {
-	PhoneNumber          string   `protobuf:"bytes,3,opt,name=PhoneNumber,proto3" json:"PhoneNumber,omitempty"`
-	CountryCode          string   `protobuf:"bytes,4,opt,name=CountryCode,proto3" json:"CountryCode,omitempty"`
-	ValidityPeriod       uint64   `protobuf:"varint,5,opt,name=ValidityPeriod,proto3" json:"ValidityPeriod,omitempty"`
+	Operation            string   `protobuf:"bytes,1,opt,name=Operation,proto3" json:"Operation,omitempty"`
+	PhoneNumber          string   `protobuf:"bytes,2,opt,name=PhoneNumber,proto3" json:"PhoneNumber,omitempty"`
+	CountryCode          string   `protobuf:"bytes,3,opt,name=CountryCode,proto3" json:"CountryCode,omitempty"`
+	ValidityPeriod       int64    `protobuf:"varint,4,opt,name=ValidityPeriod,proto3" json:"ValidityPeriod,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -541,6 +519,13 @@ func (m *SendVerifyCodeByCallPhoneRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_SendVerifyCodeByCallPhoneRequest proto.InternalMessageInfo
 
+func (m *SendVerifyCodeByCallPhoneRequest) GetOperation() string {
+	if m != nil {
+		return m.Operation
+	}
+	return ""
+}
+
 func (m *SendVerifyCodeByCallPhoneRequest) GetPhoneNumber() string {
 	if m != nil {
 		return m.PhoneNumber
@@ -555,7 +540,7 @@ func (m *SendVerifyCodeByCallPhoneRequest) GetCountryCode() string {
 	return ""
 }
 
-func (m *SendVerifyCodeByCallPhoneRequest) GetValidityPeriod() uint64 {
+func (m *SendVerifyCodeByCallPhoneRequest) GetValidityPeriod() int64 {
 	if m != nil {
 		return m.ValidityPeriod
 	}
@@ -620,15 +605,14 @@ func (m *SendVerifyCodeByCallPhoneResponse) GetHashCode() string {
 
 func init() {
 	proto.RegisterEnum("standard.State", State_name, State_value)
-	proto.RegisterEnum("standard.Type", Type_name, Type_value)
 	proto.RegisterType((*CheckVerifyCodeRequest)(nil), "standard.CheckVerifyCodeRequest")
 	proto.RegisterType((*CheckVerifyCodeeResponse)(nil), "standard.CheckVerifyCodeeResponse")
 	proto.RegisterType((*DiscardVerifyCodeRequest)(nil), "standard.DiscardVerifyCodeRequest")
 	proto.RegisterType((*DiscardVerifyCodeResponse)(nil), "standard.DiscardVerifyCodeResponse")
 	proto.RegisterType((*SendVerifyCodeByEmailRequest)(nil), "standard.SendVerifyCodeByEmailRequest")
 	proto.RegisterType((*SendVerifyCodeByEmailResponse)(nil), "standard.SendVerifyCodeByEmailResponse")
-	proto.RegisterType((*SendVerifyCodeByPhoneSmsRequest)(nil), "standard.SendVerifyCodeByPhoneSmsRequest")
-	proto.RegisterType((*SendVerifyCodeByPhoneSmsResponse)(nil), "standard.SendVerifyCodeByPhoneSmsResponse")
+	proto.RegisterType((*SendVerifyCodeBySmsRequest)(nil), "standard.SendVerifyCodeBySmsRequest")
+	proto.RegisterType((*SendVerifyCodeBySmsResponse)(nil), "standard.SendVerifyCodeBySmsResponse")
 	proto.RegisterType((*SendVerifyCodeByCallPhoneRequest)(nil), "standard.SendVerifyCodeByCallPhoneRequest")
 	proto.RegisterType((*SendVerifyCodeByCallPhoneResponse)(nil), "standard.SendVerifyCodeByCallPhoneResponse")
 }
@@ -636,46 +620,43 @@ func init() {
 func init() { proto.RegisterFile("standard.proto", fileDescriptor_0b3e239150a6a10f) }
 
 var fileDescriptor_0b3e239150a6a10f = []byte{
-	// 613 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xc4, 0x55, 0xef, 0x6f, 0x93, 0x50,
-	0x14, 0x1d, 0x2b, 0xfd, 0x75, 0xa7, 0x1d, 0x3e, 0x75, 0x61, 0xc4, 0x1f, 0x15, 0x75, 0xce, 0x99,
-	0xec, 0xc3, 0x4c, 0xfc, 0x4e, 0xe1, 0xcd, 0x11, 0x3b, 0xda, 0x00, 0xdd, 0x34, 0x1a, 0x1b, 0x56,
-	0x9e, 0x16, 0x6d, 0xa1, 0xf2, 0xa8, 0x49, 0x13, 0x13, 0x8d, 0xdf, 0xf5, 0x2f, 0xf0, 0xcf, 0xf0,
-	0x0f, 0x34, 0xd0, 0xc2, 0x18, 0x2b, 0xb5, 0x26, 0xcb, 0xfc, 0x78, 0xcf, 0x3d, 0xef, 0xdc, 0xd3,
-	0xd3, 0xf7, 0x2e, 0x50, 0xa3, 0x81, 0xe5, 0xda, 0x96, 0x6f, 0xef, 0x8e, 0x7c, 0x2f, 0xf0, 0x50,
-	0x25, 0xae, 0x45, 0x13, 0x36, 0xe4, 0x3e, 0xe9, 0x7d, 0x3c, 0x22, 0xbe, 0xf3, 0x6e, 0x22, 0x7b,
-	0x36, 0xd1, 0xc9, 0xa7, 0x31, 0xa1, 0x01, 0x12, 0xa0, 0x72, 0x60, 0xd1, 0x7e, 0x08, 0xf1, 0x4c,
-	0x9d, 0xd9, 0xae, 0xea, 0x49, 0x8d, 0xee, 0x00, 0x9c, 0x1e, 0xe0, 0x57, 0xa3, 0x6e, 0x0a, 0x11,
-	0x5f, 0x03, 0x9f, 0x51, 0x25, 0x3a, 0xa1, 0x23, 0xcf, 0xa5, 0x04, 0x3d, 0x84, 0xa2, 0x11, 0x58,
-	0xc1, 0x54, 0xb4, 0xb6, 0xb7, 0xbe, 0x9b, 0x78, 0x8b, 0x60, 0x7d, 0xda, 0x45, 0x3c, 0x94, 0x0f,
-	0x09, 0xa5, 0xd6, 0xfb, 0x58, 0x3f, 0x2e, 0xc5, 0x67, 0xc0, 0x2b, 0x0e, 0xed, 0x59, 0xbe, 0xfd,
-	0x4f, 0xa6, 0xc5, 0x37, 0xb0, 0x39, 0xe7, 0xdc, 0x45, 0xb9, 0xfa, 0xce, 0xc0, 0x2d, 0x83, 0xb8,
-	0x29, 0xed, 0xc6, 0x04, 0x0f, 0x2d, 0x67, 0x10, 0x5b, 0xdb, 0x80, 0x92, 0xd4, 0x0b, 0x1c, 0xcf,
-	0x9d, 0x9d, 0x9c, 0x55, 0x48, 0x84, 0x2b, 0x11, 0x4f, 0xb2, 0x6d, 0x9f, 0x50, 0xca, 0x17, 0xa2,
-	0xee, 0x19, 0x0c, 0x6d, 0x41, 0xed, 0xc8, 0x1a, 0x38, 0xb6, 0x13, 0x4c, 0xda, 0xc4, 0x77, 0x3c,
-	0x9b, 0x2f, 0xd6, 0x99, 0x6d, 0x56, 0xcf, 0xa0, 0xe2, 0x17, 0xb8, 0x9d, 0xe3, 0xe1, 0x82, 0x7e,
-	0xe6, 0x99, 0x80, 0x0b, 0x99, 0x80, 0x7f, 0x30, 0x70, 0x37, 0x3b, 0xbe, 0xdd, 0xf7, 0x5c, 0x62,
-	0x0c, 0x69, 0x9c, 0x42, 0x1d, 0xd6, 0x22, 0x48, 0x1b, 0x0f, 0x4f, 0x88, 0x3f, 0x93, 0x48, 0x43,
-	0x21, 0x43, 0xf6, 0xc6, 0x6e, 0xe0, 0x4f, 0x2f, 0x17, 0x3b, 0x65, 0xa4, 0xa0, 0xa5, 0xd3, 0xf8,
-	0x0a, 0xf5, 0x7c, 0x3b, 0x97, 0x11, 0xc8, 0x4f, 0xe6, 0xbc, 0x03, 0xd9, 0x1a, 0x0c, 0x22, 0x17,
-	0xff, 0x23, 0x91, 0x6f, 0x0c, 0xdc, 0x5b, 0x60, 0xe8, 0x12, 0x32, 0xd9, 0xf9, 0xcd, 0xcc, 0xd4,
-	0xd1, 0x1a, 0x94, 0x3b, 0xda, 0x0b, 0xad, 0x75, 0xac, 0x71, 0x2b, 0x61, 0x61, 0x74, 0x64, 0x19,
-	0x1b, 0x06, 0xc7, 0x84, 0xc5, 0xbe, 0xa4, 0x36, 0x3b, 0x3a, 0xe6, 0x56, 0x11, 0x40, 0x49, 0xc7,
-	0x6d, 0x2c, 0x99, 0x5c, 0x21, 0x6c, 0x1c, 0x4b, 0xaa, 0xa9, 0x6a, 0xcf, 0x39, 0x16, 0xd5, 0x00,
-	0xda, 0x7a, 0x4b, 0xc6, 0x58, 0x09, 0xeb, 0x22, 0xba, 0x0a, 0x55, 0xad, 0x65, 0x76, 0xf1, 0x4b,
-	0xd5, 0x30, 0xb9, 0x52, 0x58, 0x76, 0x34, 0x05, 0xef, 0xab, 0x1a, 0x56, 0xb8, 0xf2, 0x8c, 0x7d,
-	0xa0, 0x36, 0x54, 0x13, 0x2b, 0x5c, 0x05, 0x5d, 0x87, 0x75, 0x45, 0x95, 0x9a, 0x5d, 0xa5, 0xd1,
-	0xdd, 0x97, 0xcc, 0x68, 0x56, 0x15, 0xf1, 0x70, 0x43, 0x69, 0x74, 0x5b, 0x6d, 0xac, 0x4b, 0xa6,
-	0xda, 0xd2, 0x92, 0x0e, 0xec, 0x3c, 0x00, 0xd6, 0x9c, 0x8c, 0x08, 0x2a, 0x43, 0xc1, 0x38, 0x34,
-	0xb8, 0x15, 0x54, 0x01, 0x56, 0x96, 0x9a, 0x4d, 0x8e, 0x41, 0x55, 0x28, 0xe2, 0x43, 0x49, 0x6d,
-	0x72, 0xab, 0x7b, 0xbf, 0x58, 0x28, 0x85, 0xf9, 0x12, 0x1f, 0xbd, 0x82, 0xf5, 0xcc, 0x0a, 0x44,
-	0xf5, 0xd3, 0x20, 0xe7, 0xef, 0x5c, 0x41, 0xcc, 0x65, 0x24, 0xff, 0x8e, 0xb8, 0x82, 0xde, 0xc2,
-	0xb5, 0x73, 0x8b, 0x0c, 0xa5, 0x8e, 0xe6, 0x6d, 0x47, 0xe1, 0xfe, 0x42, 0x4e, 0xa2, 0xff, 0x01,
-	0x6e, 0xce, 0xdd, 0x22, 0x68, 0x2b, 0x75, 0x13, 0x16, 0xac, 0x3a, 0xe1, 0xd1, 0x5f, 0x79, 0xc9,
-	0x2c, 0x0a, 0x7c, 0xde, 0x1b, 0x45, 0x8f, 0xf3, 0x65, 0x32, 0x6b, 0x45, 0xd8, 0x59, 0x86, 0x9a,
-	0x0c, 0xfd, 0x0c, 0x9b, 0xb9, 0xaf, 0x00, 0x2d, 0x90, 0xca, 0xbe, 0x5d, 0xe1, 0xc9, 0x52, 0xdc,
-	0x78, 0xee, 0x49, 0x29, 0xfa, 0xfa, 0x3e, 0xfd, 0x13, 0x00, 0x00, 0xff, 0xff, 0xe2, 0x47, 0x9c,
-	0xeb, 0x8f, 0x07, 0x00, 0x00,
+	// 576 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xcc, 0x55, 0xdf, 0x6f, 0x93, 0x50,
+	0x18, 0x1d, 0xeb, 0xd6, 0x1f, 0xdf, 0xb4, 0xc3, 0xeb, 0x8f, 0x30, 0x9c, 0xa6, 0xa2, 0x9b, 0xcb,
+	0x4c, 0xf6, 0x30, 0x13, 0xdf, 0x29, 0xdc, 0x3a, 0xa2, 0x42, 0x03, 0x74, 0xd3, 0x68, 0x6c, 0xd8,
+	0xb8, 0x5a, 0xb4, 0x85, 0x7a, 0x2f, 0x35, 0xa9, 0xf1, 0xc1, 0x47, 0x5f, 0xfc, 0x1b, 0x7c, 0xf3,
+	0xc9, 0x3f, 0xd2, 0xc0, 0x0a, 0x65, 0x08, 0xdb, 0x4c, 0x96, 0xc5, 0xc7, 0xef, 0xdc, 0x73, 0xcf,
+	0x39, 0x9c, 0xed, 0x7e, 0x85, 0x26, 0x0b, 0x1d, 0xdf, 0x75, 0xa8, 0xbb, 0x33, 0xa6, 0x41, 0x18,
+	0xa0, 0x7a, 0x32, 0x4b, 0x36, 0xdc, 0x52, 0x06, 0xe4, 0xe8, 0xe3, 0x3e, 0xa1, 0xde, 0xbb, 0xa9,
+	0x12, 0xb8, 0xc4, 0x24, 0x9f, 0x26, 0x84, 0x85, 0x48, 0x84, 0xfa, 0x9e, 0xc3, 0x06, 0x11, 0x24,
+	0x70, 0x2d, 0x6e, 0xab, 0x61, 0xa6, 0x33, 0xba, 0x0b, 0x30, 0xbf, 0x20, 0x2c, 0xc6, 0xa7, 0x19,
+	0x44, 0x7a, 0x0d, 0x42, 0x4e, 0x95, 0x98, 0x84, 0x8d, 0x03, 0x9f, 0x11, 0xb4, 0x01, 0xcb, 0x56,
+	0xe8, 0x84, 0xc7, 0xa2, 0xcd, 0xdd, 0xd5, 0x9d, 0x34, 0x5b, 0x0c, 0x9b, 0xc7, 0xa7, 0x48, 0x80,
+	0xda, 0x0b, 0xc2, 0x98, 0xf3, 0x3e, 0xd1, 0x4f, 0x46, 0xe9, 0x09, 0x08, 0xaa, 0xc7, 0x8e, 0x1c,
+	0xea, 0xfe, 0x53, 0x68, 0xe9, 0x0d, 0xac, 0x15, 0xdc, 0xbb, 0xa8, 0x54, 0xdf, 0x39, 0x58, 0xb7,
+	0x88, 0x9f, 0xd1, 0x6e, 0x4f, 0xf1, 0xc8, 0xf1, 0x86, 0x49, 0xb4, 0x75, 0x68, 0x18, 0x63, 0x42,
+	0x9d, 0xd0, 0x0b, 0xfc, 0x59, 0xb6, 0x39, 0x80, 0x24, 0xb8, 0x12, 0xb3, 0x65, 0xd7, 0xa5, 0x84,
+	0xb1, 0x99, 0xfa, 0x09, 0x0c, 0x6d, 0x42, 0x73, 0xdf, 0x19, 0x7a, 0xae, 0x17, 0x4e, 0xbb, 0x84,
+	0x7a, 0x81, 0x2b, 0x54, 0x5a, 0xdc, 0x56, 0xc5, 0xcc, 0xa1, 0xd2, 0x57, 0xb8, 0x53, 0x92, 0xe4,
+	0x82, 0x3e, 0xf6, 0x44, 0xcd, 0x95, 0x5c, 0xcd, 0xbf, 0x38, 0x10, 0xf3, 0xf6, 0xd6, 0x88, 0x9d,
+	0xaf, 0x86, 0x16, 0xac, 0x74, 0x07, 0x81, 0x4f, 0xf4, 0xc9, 0xe8, 0x90, 0xd0, 0x99, 0x6d, 0x16,
+	0x8a, 0x18, 0x4a, 0x30, 0xf1, 0x43, 0x3a, 0xcd, 0xb8, 0x67, 0xa1, 0x82, 0x9a, 0x96, 0x0a, 0x6b,
+	0xfa, 0x02, 0xb7, 0x0b, 0x73, 0x5e, 0x46, 0x49, 0xbf, 0x39, 0x68, 0xe5, 0xcd, 0x15, 0x67, 0x38,
+	0x8c, 0xbf, 0xf4, 0xff, 0xab, 0xea, 0x1b, 0x07, 0xf7, 0x4e, 0x89, 0x7b, 0x09, 0x8d, 0x6d, 0xff,
+	0xe4, 0x66, 0xea, 0x68, 0x05, 0x6a, 0x3d, 0xfd, 0x99, 0x6e, 0x1c, 0xe8, 0xfc, 0x42, 0x34, 0x58,
+	0x3d, 0x45, 0xc1, 0x96, 0xc5, 0x73, 0xd1, 0xd0, 0x91, 0xb5, 0xe7, 0x3d, 0x13, 0xf3, 0x8b, 0x08,
+	0xa0, 0x6a, 0xe2, 0x2e, 0x96, 0x6d, 0xbe, 0x12, 0x1d, 0x1c, 0xc8, 0x9a, 0xad, 0xe9, 0x4f, 0xf9,
+	0x25, 0xd4, 0x04, 0xe8, 0x9a, 0x86, 0x82, 0xb1, 0x1a, 0xcd, 0xcb, 0xe8, 0x2a, 0x34, 0x74, 0xc3,
+	0xee, 0xe3, 0x97, 0x9a, 0x65, 0xf3, 0xd5, 0x68, 0xec, 0xe9, 0x2a, 0xee, 0x68, 0x3a, 0x56, 0xf9,
+	0xda, 0x8c, 0xbd, 0xa7, 0xb5, 0x35, 0x1b, 0xab, 0x7c, 0x1d, 0x09, 0x70, 0x43, 0x6d, 0xf7, 0x8d,
+	0x2e, 0x36, 0x65, 0x5b, 0x33, 0xf4, 0x7e, 0x47, 0xb6, 0x63, 0xc3, 0xc6, 0xee, 0x8f, 0x25, 0xa8,
+	0x46, 0x25, 0x11, 0x8a, 0x5e, 0xc1, 0x6a, 0x6e, 0xff, 0xa1, 0xd6, 0xbc, 0x8d, 0xe2, 0x85, 0x2b,
+	0x4a, 0xa5, 0x8c, 0xb4, 0x62, 0x69, 0x01, 0xbd, 0x85, 0x6b, 0x7f, 0x6d, 0x31, 0x94, 0xb9, 0x5a,
+	0xb6, 0x1a, 0xc5, 0xfb, 0xa7, 0x72, 0x52, 0x7d, 0x17, 0xae, 0x17, 0xbc, 0x0a, 0xf4, 0x20, 0xf3,
+	0xc7, 0x2c, 0x7d, 0xdc, 0xe2, 0xc6, 0x19, 0xac, 0xd4, 0xe5, 0x03, 0xdc, 0x2c, 0x5c, 0x51, 0x68,
+	0xb3, 0x5c, 0x21, 0xbb, 0x4d, 0xc5, 0x87, 0x67, 0xf2, 0x52, 0xaf, 0xcf, 0xb0, 0x56, 0xfa, 0xbf,
+	0x8b, 0xb6, 0xcb, 0x75, 0xf2, 0xef, 0x51, 0x7c, 0x74, 0x2e, 0x6e, 0xe2, 0x7b, 0x58, 0x8d, 0x7f,
+	0x6b, 0x1f, 0xff, 0x09, 0x00, 0x00, 0xff, 0xff, 0x91, 0xa8, 0x3b, 0xe7, 0x7d, 0x07, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -692,8 +673,8 @@ const _ = grpc.SupportPackageIsVersion4
 type SenderClient interface {
 	CheckVerifyCode(ctx context.Context, in *CheckVerifyCodeRequest, opts ...grpc.CallOption) (*CheckVerifyCodeeResponse, error)
 	DiscardVerifyCode(ctx context.Context, in *DiscardVerifyCodeRequest, opts ...grpc.CallOption) (*DiscardVerifyCodeResponse, error)
+	SendVerifyCodeBySms(ctx context.Context, in *SendVerifyCodeBySmsRequest, opts ...grpc.CallOption) (*SendVerifyCodeBySmsResponse, error)
 	SendVerifyCodeByEmail(ctx context.Context, in *SendVerifyCodeByEmailRequest, opts ...grpc.CallOption) (*SendVerifyCodeByEmailResponse, error)
-	SendVerifyCodeByPhoneSms(ctx context.Context, in *SendVerifyCodeByPhoneSmsRequest, opts ...grpc.CallOption) (*SendVerifyCodeByPhoneSmsResponse, error)
 	SendVerifyCodeByCallPhone(ctx context.Context, in *SendVerifyCodeByCallPhoneRequest, opts ...grpc.CallOption) (*SendVerifyCodeByCallPhoneResponse, error)
 }
 
@@ -723,18 +704,18 @@ func (c *senderClient) DiscardVerifyCode(ctx context.Context, in *DiscardVerifyC
 	return out, nil
 }
 
-func (c *senderClient) SendVerifyCodeByEmail(ctx context.Context, in *SendVerifyCodeByEmailRequest, opts ...grpc.CallOption) (*SendVerifyCodeByEmailResponse, error) {
-	out := new(SendVerifyCodeByEmailResponse)
-	err := c.cc.Invoke(ctx, "/standard.Sender/SendVerifyCodeByEmail", in, out, opts...)
+func (c *senderClient) SendVerifyCodeBySms(ctx context.Context, in *SendVerifyCodeBySmsRequest, opts ...grpc.CallOption) (*SendVerifyCodeBySmsResponse, error) {
+	out := new(SendVerifyCodeBySmsResponse)
+	err := c.cc.Invoke(ctx, "/standard.Sender/SendVerifyCodeBySms", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *senderClient) SendVerifyCodeByPhoneSms(ctx context.Context, in *SendVerifyCodeByPhoneSmsRequest, opts ...grpc.CallOption) (*SendVerifyCodeByPhoneSmsResponse, error) {
-	out := new(SendVerifyCodeByPhoneSmsResponse)
-	err := c.cc.Invoke(ctx, "/standard.Sender/SendVerifyCodeByPhoneSms", in, out, opts...)
+func (c *senderClient) SendVerifyCodeByEmail(ctx context.Context, in *SendVerifyCodeByEmailRequest, opts ...grpc.CallOption) (*SendVerifyCodeByEmailResponse, error) {
+	out := new(SendVerifyCodeByEmailResponse)
+	err := c.cc.Invoke(ctx, "/standard.Sender/SendVerifyCodeByEmail", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -754,8 +735,8 @@ func (c *senderClient) SendVerifyCodeByCallPhone(ctx context.Context, in *SendVe
 type SenderServer interface {
 	CheckVerifyCode(context.Context, *CheckVerifyCodeRequest) (*CheckVerifyCodeeResponse, error)
 	DiscardVerifyCode(context.Context, *DiscardVerifyCodeRequest) (*DiscardVerifyCodeResponse, error)
+	SendVerifyCodeBySms(context.Context, *SendVerifyCodeBySmsRequest) (*SendVerifyCodeBySmsResponse, error)
 	SendVerifyCodeByEmail(context.Context, *SendVerifyCodeByEmailRequest) (*SendVerifyCodeByEmailResponse, error)
-	SendVerifyCodeByPhoneSms(context.Context, *SendVerifyCodeByPhoneSmsRequest) (*SendVerifyCodeByPhoneSmsResponse, error)
 	SendVerifyCodeByCallPhone(context.Context, *SendVerifyCodeByCallPhoneRequest) (*SendVerifyCodeByCallPhoneResponse, error)
 }
 
@@ -769,11 +750,11 @@ func (*UnimplementedSenderServer) CheckVerifyCode(ctx context.Context, req *Chec
 func (*UnimplementedSenderServer) DiscardVerifyCode(ctx context.Context, req *DiscardVerifyCodeRequest) (*DiscardVerifyCodeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DiscardVerifyCode not implemented")
 }
+func (*UnimplementedSenderServer) SendVerifyCodeBySms(ctx context.Context, req *SendVerifyCodeBySmsRequest) (*SendVerifyCodeBySmsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendVerifyCodeBySms not implemented")
+}
 func (*UnimplementedSenderServer) SendVerifyCodeByEmail(ctx context.Context, req *SendVerifyCodeByEmailRequest) (*SendVerifyCodeByEmailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendVerifyCodeByEmail not implemented")
-}
-func (*UnimplementedSenderServer) SendVerifyCodeByPhoneSms(ctx context.Context, req *SendVerifyCodeByPhoneSmsRequest) (*SendVerifyCodeByPhoneSmsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendVerifyCodeByPhoneSms not implemented")
 }
 func (*UnimplementedSenderServer) SendVerifyCodeByCallPhone(ctx context.Context, req *SendVerifyCodeByCallPhoneRequest) (*SendVerifyCodeByCallPhoneResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendVerifyCodeByCallPhone not implemented")
@@ -819,6 +800,24 @@ func _Sender_DiscardVerifyCode_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Sender_SendVerifyCodeBySms_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendVerifyCodeBySmsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SenderServer).SendVerifyCodeBySms(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/standard.Sender/SendVerifyCodeBySms",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SenderServer).SendVerifyCodeBySms(ctx, req.(*SendVerifyCodeBySmsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Sender_SendVerifyCodeByEmail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SendVerifyCodeByEmailRequest)
 	if err := dec(in); err != nil {
@@ -833,24 +832,6 @@ func _Sender_SendVerifyCodeByEmail_Handler(srv interface{}, ctx context.Context,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(SenderServer).SendVerifyCodeByEmail(ctx, req.(*SendVerifyCodeByEmailRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Sender_SendVerifyCodeByPhoneSms_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SendVerifyCodeByPhoneSmsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(SenderServer).SendVerifyCodeByPhoneSms(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/standard.Sender/SendVerifyCodeByPhoneSms",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SenderServer).SendVerifyCodeByPhoneSms(ctx, req.(*SendVerifyCodeByPhoneSmsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -886,12 +867,12 @@ var _Sender_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Sender_DiscardVerifyCode_Handler,
 		},
 		{
-			MethodName: "SendVerifyCodeByEmail",
-			Handler:    _Sender_SendVerifyCodeByEmail_Handler,
+			MethodName: "SendVerifyCodeBySms",
+			Handler:    _Sender_SendVerifyCodeBySms_Handler,
 		},
 		{
-			MethodName: "SendVerifyCodeByPhoneSms",
-			Handler:    _Sender_SendVerifyCodeByPhoneSms_Handler,
+			MethodName: "SendVerifyCodeByEmail",
+			Handler:    _Sender_SendVerifyCodeByEmail_Handler,
 		},
 		{
 			MethodName: "SendVerifyCodeByCallPhone",
