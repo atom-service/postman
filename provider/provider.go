@@ -8,32 +8,44 @@ import (
 // SMSProvider 短信服务
 type SMSProvider interface {
 	Weights() int
-	SendVerifyCode(code string) error
+	SendVerifyCode(action, code string) error
 }
 
 // CallProvider 电话服务
 type CallProvider interface {
 	Weights() int
-	SendVerifyCode(code string) error
+	SendVerifyCode(action, code string) error
 }
 
 // EmailProvider 邮件服务
 type EmailProvider interface {
 	Weights() int
-	SendVerifyCode(code string) error
-}
-
-// Service Service
-type Service struct {
-	SMS   []*SMSProvider
-	Call  []*CallProvider
-	Email []*EmailProvider
+	SendVerifyCode(action, code string) error
 }
 
 // NewService NewService
 func NewService() *Service {
 	service := new(Service)
 	return service
+}
+
+// Service Service
+type Service struct {
+	SMS   *SMSProvider
+	Call  *CallProvider
+	Email *EmailProvider
+}
+
+func (srv Service) nextSMSProvider() *SMSProvider {
+	return srv.SMS
+}
+
+func (srv Service) nextCallProvider() *CallProvider {
+	return srv.Call
+}
+
+func (srv Service) nextEmailProvider() *EmailProvider {
+	return srv.Email
 }
 
 // CheckVerifyCode CheckVerifyCode
@@ -51,6 +63,14 @@ func (srv Service) DiscardVerifyCode(ctx context.Context, req *standard.DiscardV
 // SendVerifyCodeBySms SendVerifyCodeBySms
 func (srv Service) SendVerifyCodeBySms(ctx context.Context, req *standard.SendVerifyCodeBySmsRequest) (resp *standard.SendVerifyCodeBySmsResponse, err error) {
 	resp = new(standard.SendVerifyCodeBySmsResponse)
+	smsProvider := srv.nextSMSProvider()
+	if smsProvider == nil {
+		resp.State = standard.State_NO_SERVICE_AVAILABLE
+		return resp, nil
+	}
+
+	smsProvider.SendVerifyCode(req.Operation)
+
 	return resp, err
 }
 

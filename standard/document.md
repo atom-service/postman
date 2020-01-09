@@ -211,13 +211,11 @@
 | UNKNOWN | 0 | 未知 |
 | SUCCESS | 1 | 成功 |
 | FAILURE | 2 | 失败 |
-| REPEAT | 3 | 重复 |
-| WAITING | 4 | 等待 |
-| PROCEEDING | 5 | 处理中 |
-| NOT_EXIST | 6 | 不存在 |
-| UNDEFINED | 7 | 未定义 |
-| PROHIBITED | 8 | 被禁止 |
-| DB_OPERATION_FATLURE | 9 | 数据库操作失败 |
+| NOT_EXIST | 3 | 不存在 |
+| UNDEFINED | 4 | 未定义 |
+| PROHIBITED | 5 | 被禁止 |
+| NO_SERVICE_AVAILABLE | 6 | 无可用服务 |
+| DB_OPERATION_FATLURE | 7 | 数据库操作失败 |
 
 
  
