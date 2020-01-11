@@ -6,14 +6,15 @@
 - [standard.proto](#standard.proto)
     - [CheckVerifyCodeRequest](#standard.CheckVerifyCodeRequest)
     - [CheckVerifyCodeeResponse](#standard.CheckVerifyCodeeResponse)
-    - [DiscardVerifyCodeRequest](#standard.DiscardVerifyCodeRequest)
-    - [DiscardVerifyCodeResponse](#standard.DiscardVerifyCodeResponse)
+    - [DestroyVerifyCodeByKeyRequest](#standard.DestroyVerifyCodeByKeyRequest)
+    - [DestroyVerifyCodeByKeyResponse](#standard.DestroyVerifyCodeByKeyResponse)
     - [SendVerifyCodeByCallPhoneRequest](#standard.SendVerifyCodeByCallPhoneRequest)
     - [SendVerifyCodeByCallPhoneResponse](#standard.SendVerifyCodeByCallPhoneResponse)
     - [SendVerifyCodeByEmailRequest](#standard.SendVerifyCodeByEmailRequest)
     - [SendVerifyCodeByEmailResponse](#standard.SendVerifyCodeByEmailResponse)
     - [SendVerifyCodeBySmsRequest](#standard.SendVerifyCodeBySmsRequest)
     - [SendVerifyCodeBySmsResponse](#standard.SendVerifyCodeBySmsResponse)
+    - [VerifyCode](#standard.VerifyCode)
   
     - [State](#standard.State)
   
@@ -40,7 +41,7 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| HashCode | [string](#string) |  | 唯一标识符 |
+| Key | [string](#string) |  | 唯一标识符 |
 | VerifyCode | [string](#string) |  | 验证码 |
 
 
@@ -64,24 +65,24 @@
 
 
 
-<a name="standard.DiscardVerifyCodeRequest"></a>
+<a name="standard.DestroyVerifyCodeByKeyRequest"></a>
 
-### DiscardVerifyCodeRequest
+### DestroyVerifyCodeByKeyRequest
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| HashCode | [string](#string) |  | 唯一标识符 |
+| Key | [string](#string) |  | 唯一标识符 |
 
 
 
 
 
 
-<a name="standard.DiscardVerifyCodeResponse"></a>
+<a name="standard.DestroyVerifyCodeByKeyResponse"></a>
 
-### DiscardVerifyCodeResponse
+### DestroyVerifyCodeByKeyResponse
 
 
 
@@ -123,7 +124,7 @@
 | ----- | ---- | ----- | ----------- |
 | State | [State](#standard.State) |  |  |
 | Message | [string](#string) |  |  |
-| HashCode | [string](#string) |  | 唯一标识符 |
+| Key | [string](#string) |  | 唯一标识符 |
 
 
 
@@ -157,7 +158,7 @@
 | ----- | ---- | ----- | ----------- |
 | State | [State](#standard.State) |  |  |
 | Message | [string](#string) |  |  |
-| HashCode | [string](#string) |  | 唯一标识符 |
+| Key | [string](#string) |  | 唯一标识符 |
 
 
 
@@ -192,7 +193,28 @@
 | ----- | ---- | ----- | ----------- |
 | State | [State](#standard.State) |  |  |
 | Message | [string](#string) |  |  |
-| HashCode | [string](#string) |  | 唯一标识符 |
+| Key | [string](#string) |  | 唯一标识符 |
+
+
+
+
+
+
+<a name="standard.VerifyCode"></a>
+
+### VerifyCode
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| Key | [string](#string) |  | 数据 |
+| Code | [string](#string) |  | 失效时间 |
+| Operation | [string](#string) |  | 创建时间 |
+| ExpireTime | [string](#string) |  | 销毁时间 |
+| DeletedTime | [string](#string) |  |  |
+| CreatedTime | [string](#string) |  |  |
+| UpdatedTime | [string](#string) |  | 生效时间 |
 
 
 
@@ -231,8 +253,8 @@
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
 | CheckVerifyCode | [CheckVerifyCodeRequest](#standard.CheckVerifyCodeRequest) | [CheckVerifyCodeeResponse](#standard.CheckVerifyCodeeResponse) |  |
-| DiscardVerifyCode | [DiscardVerifyCodeRequest](#standard.DiscardVerifyCodeRequest) | [DiscardVerifyCodeResponse](#standard.DiscardVerifyCodeResponse) |  |
 | SendVerifyCodeBySms | [SendVerifyCodeBySmsRequest](#standard.SendVerifyCodeBySmsRequest) | [SendVerifyCodeBySmsResponse](#standard.SendVerifyCodeBySmsResponse) |  |
+| DestroyVerifyCodeByKey | [DestroyVerifyCodeByKeyRequest](#standard.DestroyVerifyCodeByKeyRequest) | [DestroyVerifyCodeByKeyResponse](#standard.DestroyVerifyCodeByKeyResponse) |  |
 | SendVerifyCodeByEmail | [SendVerifyCodeByEmailRequest](#standard.SendVerifyCodeByEmailRequest) | [SendVerifyCodeByEmailResponse](#standard.SendVerifyCodeByEmailResponse) |  |
 | SendVerifyCodeByCallPhone | [SendVerifyCodeByCallPhoneRequest](#standard.SendVerifyCodeByCallPhoneRequest) | [SendVerifyCodeByCallPhoneResponse](#standard.SendVerifyCodeByCallPhoneResponse) |  |
 

@@ -12,7 +12,7 @@ func MustInitTables() {
 // InitTables InitTables
 func InitTables() error {
 	var err error
-	err = createLabelTable()
+	err = createVerifyCodeTable()
 	if err != nil {
 		return err
 	}
@@ -32,11 +32,7 @@ func MustTruncateTables() {
 // TruncateTables TruncateTables
 func TruncateTables() error {
 	var err error
-	err = truncateLabelTable()
-	if err != nil {
-		return err
-	}
-	err = truncateLabelMappingTable()
+	err = truncateVerifyCodeTable()
 	if err != nil {
 		return err
 	}

@@ -3,6 +3,7 @@ package dao
 import (
 	"fmt"
 	"math"
+	"math/rand"
 	"strings"
 	"time"
 
@@ -11,7 +12,6 @@ import (
 )
 
 const verifyCodeTableName = "verify-code"
-const verifyCodeHistoryTableName = "verify-code-history"
 
 func createVerifyCodeTable() error {
 	var err error
@@ -20,7 +20,7 @@ func createVerifyCodeTable() error {
 		"CREATE TABLE IF NOT EXISTS",
 		"`" + verifyCodeTableName + "`",
 		"(",
-		"`ID` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',",
+		"`Key` VARCHAR(128) NOT NULL COMMENT 'Key',",
 		"`Code` varchar(128) NOT NULL COMMENT '验证码',",
 		"`Operation` varchar(128) DEFAULT '' COMMENT '操作',",
 		"`ExpireTime` datetime DEFAULT '' COMMENT '过期时间',",
@@ -28,33 +28,11 @@ func createVerifyCodeTable() error {
 		"`CreatedTime` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',",
 		"`UpdatedTime` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',",
 		"PRIMARY KEY (`ID`,`Code`,`ExpireTime`),",
-		"UNIQUE KEY `ID` (`ID`)",
+		"UNIQUE KEY (`Key`)",
 		")",
 		"ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;",
 	}, " "))
 	_, err = masterStmp.Exec()
-	if err != nil {
-		return err
-	}
-
-	// 历史表
-	historyStmp := sqldb.CreateStmt(strings.Join([]string{
-		"CREATE TABLE IF NOT EXISTS",
-		"`" + verifyCodeHistoryTableName + "`",
-		"(",
-		"`Index` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Index',",
-		"`ID` int(11) COMMENT 'ID',",
-		"`Code` varchar(128) COMMENT '验证码',",
-		"`Operation` varchar(128) COMMENT '操作',",
-		"`ExpireTime` datetime COMMENT '过期时间',",
-		"`DeletedTime` datetime COMMENT '删除时间',",
-		"`CreatedTime` datetime COMMENT '创建时间',",
-		"`UpdatedTime` datetime COMMENT '更新时间',",
-		"PRIMARY KEY (`Index`)",
-		")",
-		"ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;",
-	}, " "))
-	_, err = historyStmp.Exec()
 	if err != nil {
 		return err
 	}
@@ -70,78 +48,106 @@ func truncateVerifyCodeTable() error {
 		return err
 	}
 
-	historyStmp := sqldb.CreateStmt("truncate table `" + verifyCodeHistoryTableName + "`")
-	_, err = historyStmp.Exec()
-	if err != nil {
-		return err
-	}
 	return nil
 }
 
-// CreateVerifyCodeHistory 对指定数据创建一条历史快照
-func CreateVerifyCodeHistory(id int64) error {
-	var err error
-	namedData := map[string]interface{}{
-		"ID": id,
+// 生成一个为一个 key
+func generateUniqueKey() (string, error) {
+	randomString := func(l int) string {
+		str := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+		bytes := []byte(str)
+		result := []byte{}
+		r := rand.New(rand.NewSource(time.Now().UnixNano()))
+		for i := 0; i < l; i++ {
+			result = append(result, bytes[r.Intn(len(bytes))])
+		}
+		return string(result)
 	}
 
-	// 插入一条更新历史
-	historyStmp := sqldb.CreateNamedStmt(strings.Join([]string{
-		"INSERT INTO",
-		"`" + verifyCodeHistoryTableName + "`",
-		"(`ID`,`Code`,`Operation`,`ExpireTime`,`DeletedTime`,`CreatedTime`,`UpdatedTime`)",
-		"SELECT",
-		"`ID`,`Code`,`Operation`,`ExpireTime`,`DeletedTime`,`CreatedTime`,`UpdatedTime`",
-		"FROM",
+	for {
+		newKey := randomString(128)
+		count, err := CountVerifyCodeByKey(newKey)
+		if err != nil {
+			return "", err
+		}
+
+		if count <= 0 {
+			return newKey, nil
+		}
+	}
+}
+
+// clearExpiredVerifyCode 清空所有可以破坏、清除的单元数据
+func clearExpiredVerifyCode() error {
+	stmp := sqldb.CreateNamedStmt(strings.Join([]string{
+		"DELETE FROM",
 		"`" + verifyCodeTableName + "`",
 		"WHERE",
-		"`ID`=:ID",
+		"`ExpireTime` <= :CurrentTime",
 	}, " "))
-	_, err = historyStmp.Exec(namedData)
+
+	namedData := map[string]interface{}{
+		"CurrentTime": time.Now(),
+	}
+
+	_, err := stmp.Exec(namedData)
 	if err != nil {
 		return err
 	}
+
 	return nil
 }
 
 // CreateVerifyCode 一个验证码
-func CreateVerifyCode(code, operation, expireTime string) (int64, error) {
+func CreateVerifyCode(code, operation string, expireTime time.Time) (string, error) {
+	key, err := generateUniqueKey()
+	if err != nil {
+		return "", err
+	}
+
 	stmp := sqldb.CreateNamedStmt(strings.Join([]string{
 		"INSERT INTO",
 		"`" + verifyCodeTableName + "`",
-		"(`Code`, `Operation`, `ExpireTime`)",
+		"(`Key`, `Code`, `Operation`, `ExpireTime`)",
 		"VALUES",
-		"(:Code, :Operation, :ExpireTime)",
+		"(Key, :Code, :Operation, :ExpireTime)",
 	}, " "))
 
 	data := map[string]interface{}{
+		"Key":        key,
 		"Code":       code,
 		"Operation":  operation,
 		"ExpireTime": expireTime,
 	}
-	result, err := stmp.Exec(data)
+
+	_, err = stmp.Exec(data)
+	if err != nil {
+		return key, err
+	}
+	return key, err
+}
+
+// CountVerifyCodeByKey 根据 id 统计
+func CountVerifyCodeByKey(key string) (int64, error) {
+	var err error
+	err = clearExpiredVerifyCode()
 	if err != nil {
 		return 0, err
 	}
 
-	id, err := result.LastInsertId()
-	return id, err
-}
-
-// CountVerifyCodeByID 根据 id 统计
-func CountVerifyCodeByID(id int64) (int64, error) {
 	stmp := sqldb.CreateNamedStmt(strings.Join([]string{
 		"SELECT COUNT(*) as Count FROM",
 		"`" + verifyCodeTableName + "`",
 		"WHERE",
-		"`ID`=:ID",
+		"`Key`=:Key",
 	}, " "))
 
 	result := struct{ Count int64 }{}
 	namedData := map[string]interface{}{
-		"ID": id,
+		"Key": key,
 	}
-	err := stmp.Get(&result, namedData)
+
+	err = stmp.Get(&result, namedData)
 	if err != nil {
 		return 0, err
 	}
@@ -150,8 +156,12 @@ func CountVerifyCodeByID(id int64) (int64, error) {
 
 // QueryVerifyCodes 查询组
 func QueryVerifyCodes(page, limit int64) (totalPage, currentPage int64, verifyCodes []*models.VerifyCode, err error) {
-	currentPage = page // 固定当前页
+	err = clearExpiredVerifyCode()
+	if err != nil {
+		return totalPage, currentPage, verifyCodes, err
+	}
 
+	currentPage = page // 固定当前页
 	// 查询数据长度
 	countStmp := sqldb.CreateStmt(strings.Join([]string{
 		"SELECT COUNT(*) as `Count` FROM",
@@ -197,64 +207,38 @@ func QueryVerifyCodes(page, limit int64) (totalPage, currentPage int64, verifyCo
 	return totalPage, currentPage, verifyCodes, err
 }
 
-// QueryVerifyCodeByID 根据 HashCode 查询
-func QueryVerifyCodeByID(id int64) (*models.VerifyCode, error) {
+// QueryVerifyCodeByKey 根据 HashCode 查询
+func QueryVerifyCodeByKey(key string) (*models.VerifyCode, error) {
 	var err error
-	namedData := map[string]interface{}{"ID": id}
-	stmp := sqldb.CreateNamedStmt(strings.Join([]string{
-		"SELECT * FROM",
-		"`" + verifyCodeTableName + "`",
-		"WHERE",
-		"`ID`=:ID",
-	}, " "))
-
-	verifyCodes := new(models.VerifyCode)
-	err = stmp.Get(verifyCodes, namedData)
+	err = clearExpiredVerifyCode()
 	if err != nil {
 		return nil, err
 	}
 
-	return verifyCodes, nil
-}
-
-// DeleteVerifyCodeByID 删除标签
-func DeleteVerifyCodeByID(id int64) error {
-	var err error
-	namedData := map[string]interface{}{"ID": id}
+	namedData := map[string]interface{}{"Key": key}
 	stmp := sqldb.CreateNamedStmt(strings.Join([]string{
-		"DELETE FROM",
+		"SELECT * FROM",
 		"`" + verifyCodeTableName + "`",
 		"WHERE",
-		"`ID`=:ID",
+		"`Key`=:Key",
 	}, " "))
 
-	// 更新
-	err = updataVerifyCodeFieldByID(id, map[string]interface{}{"DeletedTime": time.Now()})
+	verifyCode := new(models.VerifyCode)
+	err = stmp.Get(verifyCode, namedData)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	_, err = stmp.Exec(namedData)
-	return err
+	return verifyCode, nil
 }
 
-// updataVerifyCodeFieldByID 更新标签类型
-func UpdateVerifyCodeCodeByID(id int64, name string) error {
-	return updataVerifyCodeFieldByID(id, map[string]interface{}{"Name": name})
-}
-
-// UpdateVerifyCodeOperationByID 更新标签状态
-func UpdateVerifyCodeOperationByID(id int64, category string) error {
-	return updataVerifyCodeFieldByID(id, map[string]interface{}{"Category": category})
-}
-
-// UpdateVerifyCodeExpireTimeByID 更新标签值
-func UpdateVerifyCodeExpireTimeByID(id int64, description string) error {
-	return updataVerifyCodeFieldByID(id, map[string]interface{}{"Description": description})
+// UpdateVerifyCodeExpireTimeByKey 更新标签值
+func UpdateVerifyCodeExpireTimeByKey(key string, expireTime time.Time) error {
+	return updataVerifyCodeFieldByKey(key, map[string]interface{}{"ExpireTime": expireTime})
 }
 
 // 根据 ID 更新标签
-func updataVerifyCodeFieldByID(id int64, field map[string]interface{}) error {
+func updataVerifyCodeFieldByKey(key string, field map[string]interface{}) error {
 	var err error
 
 	fieldSQL := []string{}
@@ -268,11 +252,11 @@ func updataVerifyCodeFieldByID(id int64, field map[string]interface{}) error {
 		"SET",
 		strings.Join(fieldSQL, ","),
 		"WHERE",
-		"`ID`=:ID",
+		"`Key`=:Key",
 	}, " "))
 
 	// 更新
-	field["ID"] = id
+	field["ID"] = key
 	_, err = stmp.Exec(field)
 	return err
 }

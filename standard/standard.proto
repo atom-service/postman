@@ -15,13 +15,23 @@ enum State {
   DB_OPERATION_FATLURE = 7 ; // 数据库操作失败
 }
 
-// HashCode 的设计是为了
-// 每次发送完成、会得到一个 HashCode
-// 在验证时要通过 HashCode + 用户收到的 Code 来做验证
+message VerifyCode {
+  string Key = 1 ; // 数据
+  string Code = 2 ; // 失效时间
+  string Operation = 3 ; // 创建时间
+  string ExpireTime = 4 ; // 销毁时间
+  string DeletedTime = 5 ;
+  string CreatedTime = 6 ;
+  string UpdatedTime = 7 ; // 生效时间
+}
+
+// Key 的设计是为了
+// 每次发送完成、会得到一个 Key
+// 在验证时要通过 Key + 用户收到的 Code 来做验证
 // 同一个用户可能发送过多次相同操作的验证码、甚至可能出现验证码也相同
 
 message CheckVerifyCodeRequest{
-  string HashCode    = 1 ;  // 唯一标识符
+  string Key    = 1 ;  // 唯一标识符
   string VerifyCode  = 2 ;  // 验证码
 }
 
@@ -30,11 +40,11 @@ message CheckVerifyCodeeResponse {
   string Message = 2 ;
 }
 
-message DiscardVerifyCodeRequest{
-  string HashCode  = 1 ;  // 唯一标识符
+message DestroyVerifyCodeByKeyRequest{
+  string Key  = 1 ;  // 唯一标识符
 }
 
-message DiscardVerifyCodeResponse {
+message DestroyVerifyCodeByKeyResponse {
   State State    = 1 ;
   string Message = 2 ;
 }
@@ -49,7 +59,7 @@ message SendVerifyCodeByEmailRequest {
 message SendVerifyCodeByEmailResponse {
   State State    = 1 ;
   string Message = 2 ;
-  string HashCode  = 3 ;  // 唯一标识符
+  string Key  = 3 ;  // 唯一标识符
 }
 
 message SendVerifyCodeBySmsRequest {
@@ -63,7 +73,7 @@ message SendVerifyCodeBySmsRequest {
 message SendVerifyCodeBySmsResponse {
   State State      = 1 ;
   string Message   = 2 ;
-  string HashCode  = 3 ;  // 唯一标识符
+  string Key  = 3 ;  // 唯一标识符
 }
 
 message SendVerifyCodeByCallPhoneRequest {
@@ -77,16 +87,17 @@ message SendVerifyCodeByCallPhoneRequest {
 message SendVerifyCodeByCallPhoneResponse {
   State State      = 1 ;
   string Message   = 2 ;
-  string HashCode  = 3 ;  // 唯一标识符
+  string Key  = 3 ;  // 唯一标识符
 }
 
 service Sender {
   rpc CheckVerifyCode(CheckVerifyCodeRequest) returns (CheckVerifyCodeeResponse){}      // 校验验证码
-  rpc DiscardVerifyCode(DiscardVerifyCodeRequest) returns (DiscardVerifyCodeResponse){}     // 废弃一条验证码
   rpc SendVerifyCodeBySms(SendVerifyCodeBySmsRequest) returns (SendVerifyCodeBySmsResponse){}     // 通过短信发送验证码
+  rpc DestroyVerifyCodeByKey(DestroyVerifyCodeByKeyRequest) returns (DestroyVerifyCodeByKeyResponse){}     // 立即销毁一条验证码
   rpc SendVerifyCodeByEmail(SendVerifyCodeByEmailRequest) returns (SendVerifyCodeByEmailResponse){}     // 通过邮件发送验证码
   rpc SendVerifyCodeByCallPhone(SendVerifyCodeByCallPhoneRequest) returns (SendVerifyCodeByCallPhoneResponse){}     // 通过电话发送验证码
 }
+
 
 // 发送：
 // 发送 邮件、短信、电话验证码、并且验证
