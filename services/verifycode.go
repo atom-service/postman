@@ -1,4 +1,4 @@
-package provider
+package services
 
 import (
 	"context"
@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/grpcbrick/sender/dao"
+	"github.com/grpcbrick/sender/provider"
 	"github.com/grpcbrick/sender/standard"
 )
 
@@ -24,12 +25,13 @@ type CallProvider interface {
 // EmailProvider 邮件服务
 type EmailProvider interface {
 	Weights() int
-	SendVerifyCode(action, code string) error
+	SendVerifyCode(email, action, code string) error
 }
 
-// NewService NewService
-func NewService() *Service {
+// New New
+func New() *Service {
 	service := new(Service)
+	service.Email = provider.NewEmail()
 	return service
 }
 
@@ -132,7 +134,7 @@ func (srv Service) SendVerifyCodeByEmail(ctx context.Context, req *standard.Send
 	}
 
 	verifyCode := srv.randomCode(6)
-	err = emailProvider.SendVerifyCode(req.Operation, srv.randomCode(6))
+	err = emailProvider.SendVerifyCode(req.EmailAddress, req.Operation, srv.randomCode(6))
 	if err != nil {
 		resp.State = standard.State_FAILURE
 		resp.Message = err.Error()
@@ -153,7 +155,7 @@ func (srv Service) SendVerifyCodeByEmail(ctx context.Context, req *standard.Send
 // SendVerifyCodeByCallPhone SendVerifyCodeByCallPhone
 func (srv Service) SendVerifyCodeByCallPhone(ctx context.Context, req *standard.SendVerifyCodeByCallPhoneRequest) (resp *standard.SendVerifyCodeByCallPhoneResponse, err error) {
 	resp = new(standard.SendVerifyCodeByCallPhoneResponse)
-	callProvider := srv.nextEmailProvider()
+	callProvider := srv.nextCallProvider()
 	if callProvider == nil {
 		resp.State = standard.State_NO_SERVICE_AVAILABLE
 		return resp, nil
