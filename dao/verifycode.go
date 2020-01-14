@@ -23,15 +23,16 @@ func createVerifyCodeTable() error {
 		"`Key` VARCHAR(128) NOT NULL COMMENT 'Key',",
 		"`Code` varchar(128) NOT NULL COMMENT '验证码',",
 		"`Operation` varchar(128) DEFAULT '' COMMENT '操作',",
-		"`ExpireTime` datetime DEFAULT '' COMMENT '过期时间',",
+		"`ExpireTime` datetime DEFAULT NULL COMMENT '过期时间',",
 		"`DeletedTime` datetime DEFAULT NULL COMMENT '删除时间',",
 		"`CreatedTime` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',",
 		"`UpdatedTime` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',",
-		"PRIMARY KEY (`ID`,`Code`,`ExpireTime`),",
+		"PRIMARY KEY (`Key`,`Code`),",
 		"UNIQUE KEY (`Key`)",
 		")",
 		"ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;",
 	}, " "))
+
 	_, err = masterStmp.Exec()
 	if err != nil {
 		return err
@@ -43,6 +44,7 @@ func createVerifyCodeTable() error {
 func truncateVerifyCodeTable() error {
 	var err error
 	masterStmp := sqldb.CreateStmt("truncate table `" + verifyCodeTableName + "`")
+
 	_, err = masterStmp.Exec()
 	if err != nil {
 		return err
@@ -77,7 +79,6 @@ func generateUniqueKey() (string, error) {
 	}
 }
 
-// clearExpiredVerifyCode 清空所有可以破坏、清除的单元数据
 func clearExpiredVerifyCode() error {
 	stmp := sqldb.CreateNamedStmt(strings.Join([]string{
 		"DELETE FROM",
@@ -110,7 +111,7 @@ func CreateVerifyCode(code, operation string, expireTime time.Time) (string, err
 		"`" + verifyCodeTableName + "`",
 		"(`Key`, `Code`, `Operation`, `ExpireTime`)",
 		"VALUES",
-		"(Key, :Code, :Operation, :ExpireTime)",
+		"(:Key, :Code, :Operation, :ExpireTime)",
 	}, " "))
 
 	data := map[string]interface{}{

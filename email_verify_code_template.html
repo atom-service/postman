@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>您有一封验证码邮件,验证码【{{.Code}}】</title>
+</head>
+
+<body>
+  <div class="body">
+    <nav class="logo">LOGO</nav>
+    <section class="content">
+      您的验证码为【{{.Code}}】
+      <br />
+      此验证码仅用于【{{.Operation}}】操作，请勿泄漏
+      <br />
+      如果验证码不是你本人发送，请忽略本邮件
+    </section>
+    <footer></footer>
+  </div>
+</body>
+<style>
+
+  .body {
+    padding: 20px 20px;
+    padding-bottom: 60px;
+    box-sizing: border-box;
+    background-color: #F8F8F8;
+  }
+
+  section {
+    font-family: 'Open Sans', 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif;
+    font-weight: normal;
+    color: #1f3349;
+    font-size: 15px;
+    line-height: 1.6;
+    margin: 0 0 10px;
+    padding: 0
+  }
+
+  .logo {
+    color: black;
+    font-size: 20px;
+    font-weight: bold;
+    padding-left: 4px;
+    padding-bottom: 10px;
+    box-sizing: border-box;
+  }
+
+  .content {
+    padding: 20px;
+    border-radius: 4px;
+    box-sizing: border-box;
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, .05);
+    box-shadow: 0px 10px 20px -10px rgba(0, 0, 0, .1);
+  }
+</style>
+
+</html>

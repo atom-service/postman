@@ -16,13 +16,13 @@ enum State {
 }
 
 message VerifyCode {
-  string Key = 1 ; // 数据
-  string Code = 2 ; // 失效时间
+  string Key = 1 ; // key
+  string Code = 2 ; // code
   string Operation = 3 ; // 创建时间
-  string ExpireTime = 4 ; // 销毁时间
-  string DeletedTime = 5 ;
-  string CreatedTime = 6 ;
-  string UpdatedTime = 7 ; // 生效时间
+  string ExpireTime = 4 ; // 过期时间
+  string DeletedTime = 5 ; // 删除时间
+  string CreatedTime = 6 ; // 创建时间
+  string UpdatedTime = 7 ; // 更新时间
 }
 
 // Key 的设计是为了
@@ -52,7 +52,7 @@ message DestroyVerifyCodeByKeyResponse {
 message SendVerifyCodeByEmailRequest {
   string Operation      = 1 ; // 操作
   string EmailAddress   = 2 ; // 邮件地址
-  int64 ValidityPeriod  = 3 ; // 有效期 单位s
+  int64 ValidityPeriod  = 3 ; // 有效期 单位 s
 }
 
 //发送成功失败状态

@@ -14,12 +14,13 @@ import (
 
 func TestMain(m *testing.M) {
 	fmt.Println("准备测试环境") // 日志
-	config.Set("email_host", "encrypt_password")
-	config.Set("email_port", "encrypt_password")
-	config.Set("email_account", "encrypt_password")
-	config.Set("email_password", "encrypt_password")
+	config.Set("email_port", "465")
+	config.Set("email_host", "smtp.exmail.qq.com")
+	config.Set("email_password", "email_password")                                              // password
+	config.Set("email_account", "notice@yinxulai.com")                                          // 账号
+	config.Set("email_verify_code_template", "../email_verify_code_template.html")              // 邮件模版
 	sqldb.Init("mysql", "root:root@tcp(localhost:3306)/default?charset=utf8mb4&parseTime=true") // 测试数据库
-	dao.InitTables()                                                                            // 初始化测试数据库                                                                        // 预插入一条用户数据
+	dao.MustInitTables()                                                                        // 初始化测试数据库                                                                        // 预插入一条用户数据
 	fmt.Println("开始执行测试")                                                                       // 日志
 	exitCode := m.Run()                                                                         // 执行测试
 	fmt.Println("测试执行完成,清理测试数据")                                                                // 日志
@@ -36,14 +37,14 @@ func TestService_SendVerifyCodeByEmail(t *testing.T) {
 		wantErr   bool
 	}{
 		{"正常邮件测试", &standard.SendVerifyCodeByEmailRequest{
-			EmailAddress: "test@yinxilai.com", Operation: "test1", ValidityPeriod: 10,
+			EmailAddress: "me@yinxulai.com", Operation: "test1", ValidityPeriod: 10,
 		}, standard.State_SUCCESS, false},
-		{"正常邮件测试", &standard.SendVerifyCodeByEmailRequest{
-			EmailAddress: "test@yinxilai.com", Operation: "test2", ValidityPeriod: 10,
-		}, standard.State_SUCCESS, false},
-		{"正常邮件测试", &standard.SendVerifyCodeByEmailRequest{
-			EmailAddress: "test@yinxilai.com", Operation: "test3", ValidityPeriod: 10,
-		}, standard.State_SUCCESS, false},
+		// {"正常邮件测试", &standard.SendVerifyCodeByEmailRequest{
+		// 	EmailAddress: "me@yinxulai.com", Operation: "test2", ValidityPeriod: 10,
+		// }, standard.State_SUCCESS, false},
+		// {"正常邮件测试", &standard.SendVerifyCodeByEmailRequest{
+		// 	EmailAddress: "me@yinxulai.com", Operation: "test3", ValidityPeriod: 10,
+		// }, standard.State_SUCCESS, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

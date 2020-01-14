@@ -13,19 +13,19 @@ import (
 // SMSProvider 短信服务
 type SMSProvider interface {
 	Weights() int
-	SendVerifyCode(action, code string) error
+	SendVerifyCode(operation, code string) error
 }
 
 // CallProvider 电话服务
 type CallProvider interface {
 	Weights() int
-	SendVerifyCode(action, code string) error
+	SendVerifyCode(operation, code string) error
 }
 
 // EmailProvider 邮件服务
 type EmailProvider interface {
 	Weights() int
-	SendVerifyCode(email, action, code string) error
+	SendVerifyCode(email, operation, code string) error
 }
 
 // New New
@@ -42,7 +42,7 @@ type Service struct {
 	Email EmailProvider // 不直接使用,使用对应的 next 方法获取
 }
 
-func (srv Service) randomCode(l int) string {
+func (srv *Service) randomCode(l int) string {
 	str := "0123456789"
 	bytes := []byte(str)
 	result := []byte{}
@@ -53,20 +53,20 @@ func (srv Service) randomCode(l int) string {
 	return string(result)
 }
 
-func (srv Service) nextSMSProvider() SMSProvider {
+func (srv *Service) nextSMSProvider() SMSProvider {
 	return srv.SMS
 }
 
-func (srv Service) nextCallProvider() CallProvider {
+func (srv *Service) nextCallProvider() CallProvider {
 	return srv.Call
 }
 
-func (srv Service) nextEmailProvider() EmailProvider {
+func (srv *Service) nextEmailProvider() EmailProvider {
 	return srv.Email
 }
 
 // CheckVerifyCode CheckVerifyCode
-func (srv Service) CheckVerifyCode(ctx context.Context, req *standard.CheckVerifyCodeRequest) (resp *standard.CheckVerifyCodeeResponse, err error) {
+func (srv *Service) CheckVerifyCode(ctx context.Context, req *standard.CheckVerifyCodeRequest) (resp *standard.CheckVerifyCodeeResponse, err error) {
 	resp = new(standard.CheckVerifyCodeeResponse)
 	record, err := dao.QueryVerifyCodeByKey(req.Key)
 	if err != nil {
@@ -84,7 +84,7 @@ func (srv Service) CheckVerifyCode(ctx context.Context, req *standard.CheckVerif
 }
 
 // DestroyVerifyCodeByKey DestroyVerifyCodeByKey
-func (srv Service) DestroyVerifyCodeByKey(ctx context.Context, req *standard.DestroyVerifyCodeByKeyRequest) (resp *standard.DestroyVerifyCodeByKeyResponse, err error) {
+func (srv *Service) DestroyVerifyCodeByKey(ctx context.Context, req *standard.DestroyVerifyCodeByKeyRequest) (resp *standard.DestroyVerifyCodeByKeyResponse, err error) {
 	resp = new(standard.DestroyVerifyCodeByKeyResponse)
 	err = dao.UpdateVerifyCodeExpireTimeByKey(req.Key, time.Now())
 	if err != nil {
@@ -97,7 +97,7 @@ func (srv Service) DestroyVerifyCodeByKey(ctx context.Context, req *standard.Des
 }
 
 // SendVerifyCodeBySms SendVerifyCodeBySms
-func (srv Service) SendVerifyCodeBySms(ctx context.Context, req *standard.SendVerifyCodeBySmsRequest) (resp *standard.SendVerifyCodeBySmsResponse, err error) {
+func (srv *Service) SendVerifyCodeBySms(ctx context.Context, req *standard.SendVerifyCodeBySmsRequest) (resp *standard.SendVerifyCodeBySmsResponse, err error) {
 	resp = new(standard.SendVerifyCodeBySmsResponse)
 	smsProvider := srv.nextSMSProvider()
 	if smsProvider == nil {
@@ -125,7 +125,7 @@ func (srv Service) SendVerifyCodeBySms(ctx context.Context, req *standard.SendVe
 }
 
 // SendVerifyCodeByEmail SendVerifyCodeByEmail
-func (srv Service) SendVerifyCodeByEmail(ctx context.Context, req *standard.SendVerifyCodeByEmailRequest) (resp *standard.SendVerifyCodeByEmailResponse, err error) {
+func (srv *Service) SendVerifyCodeByEmail(ctx context.Context, req *standard.SendVerifyCodeByEmailRequest) (resp *standard.SendVerifyCodeByEmailResponse, err error) {
 	resp = new(standard.SendVerifyCodeByEmailResponse)
 	emailProvider := srv.nextEmailProvider()
 	if emailProvider == nil {
@@ -153,7 +153,7 @@ func (srv Service) SendVerifyCodeByEmail(ctx context.Context, req *standard.Send
 }
 
 // SendVerifyCodeByCallPhone SendVerifyCodeByCallPhone
-func (srv Service) SendVerifyCodeByCallPhone(ctx context.Context, req *standard.SendVerifyCodeByCallPhoneRequest) (resp *standard.SendVerifyCodeByCallPhoneResponse, err error) {
+func (srv *Service) SendVerifyCodeByCallPhone(ctx context.Context, req *standard.SendVerifyCodeByCallPhoneRequest) (resp *standard.SendVerifyCodeByCallPhoneResponse, err error) {
 	resp = new(standard.SendVerifyCodeByCallPhoneResponse)
 	callProvider := srv.nextCallProvider()
 	if callProvider == nil {

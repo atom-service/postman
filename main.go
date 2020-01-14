@@ -21,7 +21,7 @@ func init() {
 	config.SetStandard("email_port", "", true, "邮箱服务的端口")
 	config.SetStandard("email_account", "", true, "邮箱服务的账号")
 	config.SetStandard("email_password", "", true, "邮箱服务的密码")
-	config.SetStandard("email_verify_code_template", "{{.Operation}}:{{.Code}}", true, "邮箱验证码模板")
+	config.SetStandard("email_verify_code_template", "./email_verify_code_template.html", true, "邮箱验证码模板")
 
 	config.LoadFlag()
 }

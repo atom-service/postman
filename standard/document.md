@@ -141,7 +141,7 @@
 | ----- | ---- | ----- | ----------- |
 | Operation | [string](#string) |  | 操作 |
 | EmailAddress | [string](#string) |  | 邮件地址 |
-| ValidityPeriod | [int64](#int64) |  | 有效期 单位s |
+| ValidityPeriod | [int64](#int64) |  | 有效期 单位 s |
 
 
 
@@ -208,13 +208,13 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| Key | [string](#string) |  | 数据 |
-| Code | [string](#string) |  | 失效时间 |
+| Key | [string](#string) |  | key |
+| Code | [string](#string) |  | code |
 | Operation | [string](#string) |  | 创建时间 |
-| ExpireTime | [string](#string) |  | 销毁时间 |
-| DeletedTime | [string](#string) |  |  |
-| CreatedTime | [string](#string) |  |  |
-| UpdatedTime | [string](#string) |  | 生效时间 |
+| ExpireTime | [string](#string) |  | 过期时间 |
+| DeletedTime | [string](#string) |  | 删除时间 |
+| CreatedTime | [string](#string) |  | 创建时间 |
+| UpdatedTime | [string](#string) |  | 更新时间 |
 
 
 
